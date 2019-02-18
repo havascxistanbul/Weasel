@@ -1,6 +1,6 @@
-# Noname
+# Morse-Crops
 
-Noname is an image compressor for contentful, which automatically pulls all the media from contentful and compresses them using kraken.io and pushes them back to contentful.
+Morse-Crops is an image compressor for contentful, which automatically pulls all the media from contentful and compresses them using kraken.io and pushes them back to contentful.
 
   - Automated
   - Easy to use
@@ -8,7 +8,7 @@ Noname is an image compressor for contentful, which automatically pulls all the 
 
 ### Installation
 
-Noname requires the packages in requirements.txt to run.
+Morse-Crops requires the packages in requirements.txt to run.
 
 Install contents of requirements.txt:
 
