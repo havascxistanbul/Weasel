@@ -1,6 +1,6 @@
 ##
 ## Weasel 0.1
-## Author: Arda Aydın (canardaaydin@gmail.com), Batuhan Göksu (batuhangoksu@gmail.com)
+## Authors: Arda Aydın (canardaaydin@gmail.com), Batuhan Göksu (batuhangoksu@gmail.com)
 ##
 
 import contentful
@@ -131,12 +131,25 @@ class Client(object):
                 raise StandardError('Could not parse JSON response from the Kraken.io API')
 
 def main():
+    localCode = dict['localCode']
     api = Client(dict['krakenAPIKEY'], dict['krakenAPISECRET']) # kraken keys
     clientManage = contentful_management.Client(dict['contentfulManagementKey'])
+
+    locales = clientManage.locales(dict['contentfulSpaceID'], dict['contentfulEnvironment']).all()
+    local= locales[0]
+    local.code = localCode
+    local.save()
     assets = clientManage.assets(dict['contentfulSpaceID'], dict['contentfulEnvironment']).all()
     count = 0
 
     for asset in assets:
+
+        filename = asset.file['fileName']
+        contenttype = asset.file['contentType']
+
+        if not(contenttype == 'image/png' or contenttype == 'image/jpeg' or contenttype == 'image/jpg' or contenttype=='image/svg+xml'):
+            continue
+
         count += 1
         data = {
             'wait': True
@@ -154,19 +167,19 @@ def main():
         asset.update({
             'fields': {
                 "title": {
-                    "en-US": asset.title
+                    localCode: asset.title
                 },
                 'file': {
-                    'en-US': {
-                        'fileName': '5a0bf5160f2544233070c9e9',
-                        'contentType': 'image/jpg',
+                    localCode: {
+                        'fileName': filename,
+                        'contentType': contenttype,
                         'upload': finalUrl
                     }
                 }
             }
         })
 
-        asset.process()
+        asset.process()  
 
 if __name__ == '__main__':
     main()
