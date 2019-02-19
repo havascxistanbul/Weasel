@@ -1,3 +1,7 @@
+##
+## Weasel 0.1
+## Author: Arda Aydın (canardaaydin@gmail.com), Batuhan Göksu (batuhangoksu@gmail.com)
+##
 
 import contentful
 import os
