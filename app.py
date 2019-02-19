@@ -3,20 +3,18 @@ import contentful
 import os
 import tinify
 import contentful_management
+import json
+import requests
+import yaml
+import io
 
 try:
     from cStringIO import OutputType as cStringIO
 except ImportError:
     from io import BytesIO as cStringIO
 
-import json
-import requests
-import yaml
-import io
-
 with open("keys.yaml", 'r') as stream:
     dict = yaml.load(stream)
-
 
 class Client(object):
     def __init__(self, api_key=None, api_secret=None):
@@ -52,7 +50,6 @@ class Client(object):
         }
 
         params['url'] = image_url
-
         params.update(self.auth)
 
         r = requests.post(url=api_endpoint, headers=headers, data=json.dumps(params))
@@ -61,7 +58,6 @@ class Client(object):
             return r.json()
         else:
             details = None
-
             try:
                 return r.json()
             except Exception as e:
@@ -94,7 +90,6 @@ class Client(object):
             return r.json()
         else:
             details = None
-
             try:
                 return r.json()
             except Exception as e:
@@ -126,63 +121,48 @@ class Client(object):
             return r.json()
         else:
             details = None
-
             try:
                 return r.json()
             except Exception as e:
                 raise StandardError('Could not parse JSON response from the Kraken.io API')
 
+def main():
+    api = Client(dict['krakenAPIKEY'], dict['krakenAPISECRET']) # kraken keys
+    clientManage = contentful_management.Client(dict['contentfulManagementKey'])
+    assets = clientManage.assets(dict['contentfulSpaceID'], dict['contentfulEnvironment']).all()
+    count = 0
 
-api = Client(dict['krakenAPIKEY'], dict['krakenAPISECRET']) #kraken keys
+    for asset in assets:
+        count += 1
+        data = {
+            'wait': True
+        }
 
-clientManage = contentful_management.Client(dict['contentfulManagementKey'])
+        result = api.url('http:' + asset.url(), data);
 
-assets = clientManage.assets(dict['contentfulSpaceID'], dict['contentfulEnvironment']).all()
+        if result.get('success'):
+            finalUrl = (result.get('kraked_url'))
+            print(finalUrl)
+        else:
+            print(result.get('message'))
 
-count=0
+        # contentful update
+        asset.update({
+            'fields': {
+                "title": {
+                    "en-US": asset.title
+                },
+                'file': {
+                    'en-US': {
+                        'fileName': '5a0bf5160f2544233070c9e9',
+                        'contentType': 'image/jpg',
+                        'upload': finalUrl
+                    }
+                }
+            }
+        })
 
+        asset.process()
 
-for asset in assets:
-	count+=1
-
-
-	data = {
-    'wait': True
-	}
-
-	result = api.url('http:' + asset.url(), data);
-
-	if result.get('success'):
-	    finalUrl=(result.get('kraked_url'))
-	    print(finalUrl)
-	else:
-	    print(result.get('message'))
-		
-
-
-	asset.update({ #contentful
-	    'fields': {
-			 "title": {
-			 	"en-US": asset.title
-			 },
-	        'file': {
-	            'en-US': {
-	                'fileName': '5a0bf5160f2544233070c9e9',
-	                'contentType': 'image/jpg',
-	                'upload': finalUrl
-	            }
-	        }
-	    }
-	})
-
-	asset.process()
-
-
-
-
-
-	
-
-
-
-
+if __name__ == '__main__':
+    main()
