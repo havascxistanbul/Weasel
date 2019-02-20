@@ -1,7 +1,6 @@
-![Logo](https://github.com/projecthouse/Weasel/blob/master/logo.png)
 
 <p align="center">
-  <img https://github.com/projecthouse/Weasel/blob/master/logo.png/>
+  <img src="https://github.com/projecthouse/Weasel/blob/master/logo.png"/>
 </p>
 
 # Weasel
