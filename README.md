@@ -5,7 +5,7 @@
 
 # Weasel
 
-Weasel is an image compressor for contentful, which automatically pulls all the media from contentful and compresses them using kraken.io and pushes them back to contentful.
+Weasel is an image compressor for contentful, which automatically pulls all the media from contentful and compresses them using kraken.io and pushes them back to contentful. Remind that kraken.io is free till 100mb.
 
   - Automated
   - Easy to use
@@ -24,6 +24,16 @@ $ pip3 install -r requirements.txt
 
 Change keys.yaml file with your API configurations
 
+```sh
+contentfulSpaceID: 'YOURcontentfulSpaceID'
+contentfulEnvironment: 'YOURcontentfulEnvironment'
+contentfulManagementKey: 'YOURcontentfulManagementKey'
+krakenAPIKEY: 'YOURkrakenAPIKEY'
+krakenAPISECRET: 'YOURkrakenAPISECRET'
+localCode: en-US
+```
+
+Easy peasy;
 ```sh
 python3 app.py
 ```
