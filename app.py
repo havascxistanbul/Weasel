@@ -11,7 +11,8 @@ import json
 import requests
 import yaml
 import io
-
+from yaspin import yaspin
+import time
 try:
     from cStringIO import OutputType as cStringIO
 except ImportError:
@@ -140,46 +141,55 @@ def main():
     local.code = localCode
     local.save()
     assets = clientManage.assets(dict['contentfulSpaceID'], dict['contentfulEnvironment']).all()
-    count = 0
+    count = 1
+    lan=len(assets)
 
     for asset in assets:
 
         filename = asset.file['fileName']
         contenttype = asset.file['contentType']
 
-        if not(contenttype == 'image/png' or contenttype == 'image/jpeg' or contenttype == 'image/jpg' or contenttype=='image/svg+xml'):
-            continue
+        with yaspin(text= 'Optimizing ' + str(count) + '/'+ str(lan) + '   ' + filename , color="green") as spinner:
 
-        count += 1
-        data = {
-            'wait': True
-        }
 
-        result = api.url('http:' + asset.url(), data);
+            if not(contenttype == 'image/png' or contenttype == 'image/jpeg' or contenttype == 'image/jpg' or contenttype=='image/svg+xml'):
+                spinner.ok("✅ ")
+                continue
 
-        if result.get('success'):
-            finalUrl = (result.get('kraked_url'))
-            print(finalUrl)
-        else:
-            print(result.get('message'))
+            count += 1
+            data = {
+                'wait': True
+            }
 
-        # contentful update
-        asset.update({
-            'fields': {
-                "title": {
-                    localCode: asset.title
-                },
-                'file': {
-                    localCode: {
-                        'fileName': filename,
-                        'contentType': contenttype,
-                        'upload': finalUrl
+            result = api.url('http:' + asset.url(), data);
+
+            if result.get('success'):
+                finalUrl = (result.get('kraked_url'))
+                #print(finalUrl)
+            else:
+                pass
+                #print(result.get('message'))
+
+            # contentful update
+            asset.update({
+                'fields': {
+                    "title": {
+                        localCode: asset.title
+                    },
+                    'file': {
+                        localCode: {
+                            'fileName': filename,
+                            'contentType': contenttype,
+                            'upload': finalUrl
+                        }
                     }
                 }
-            }
-        })
+            })
 
-        asset.process()  
+            asset.process()  
+            spinner.ok("✅ ")
+
+    print('All optimizable assets are optimized!')
 
 if __name__ == '__main__':
     main()
