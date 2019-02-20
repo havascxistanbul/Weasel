@@ -1,7 +1,5 @@
 
-<p align="center">
-  <img src="https://github.com/projecthouse/Weasel/blob/master/logo.png"/>
-</p>
+![Image](https://github.com/projecthouse/Weasel/blob/master/logo.png){ style="display: block; margin: 0 auto" }
 
 # Weasel
 
