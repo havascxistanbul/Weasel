@@ -1,3 +1,5 @@
+![Logo](https://github.com/projecthouse/Weasel/blob/master/logo.png)
+
 # Weasel
 
 Weasel is an image compressor for contentful, which automatically pulls all the media from contentful and compresses them using kraken.io and pushes them back to contentful.
