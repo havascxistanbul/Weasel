@@ -1,5 +1,5 @@
 
-![Image](https://github.com/projecthouse/Weasel/blob/master/logo.png)
+![Weasel](https://github.com/projecthouse/Weasel/blob/master/logo.png)
 
 # Weasel
 
